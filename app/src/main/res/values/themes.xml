@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Sonora" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Fundo escuro já na abertura, antes do Compose desenhar -->
+    <style name="Theme.Sonora" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/sonora_background</item>
+    </style>
 </resources>

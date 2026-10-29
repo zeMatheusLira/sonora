@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">Sonora</string>
+
+    <!-- Navegação -->
+    <string name="nav_tracks">Top Músicas</string>
+    <string name="nav_decades">Décadas</string>
+
+    <!-- Estados comuns -->
+    <string name="state_loading">Carregando…</string>
+    <string name="state_error_title">Algo deu errado</string>
+    <string name="state_empty_title">Nada por aqui</string>
+    <string name="action_retry">Tentar novamente</string>
+
+    <!-- Top Músicas -->
+    <string name="tracks_title">Top Músicas</string>
+    <string name="tracks_subtitle">As mais tocadas agora na Deezer</string>
+    <string name="tracks_empty">A Deezer não retornou nenhuma música no momento.</string>
+    <string name="tracks_cover_description">Capa do álbum %1$s</string>
+
+    <!-- Décadas da Música -->
+    <string name="decades_title">Décadas da Música</string>
+    <string name="decades_subtitle">Toque em um card para ler mais sobre a época</string>
+    <string name="decades_empty">Nenhuma década encontrada no banco local.</string>
+    <string name="decades_genres">Gêneros em alta</string>
+    <string name="decades_artists">Artistas icônicos</string>
+    <string name="decades_about">Sobre a década</string>
+    <string name="decades_expand">Mostrar descrição</string>
+    <string name="decades_collapse">Ocultar descrição</string>
 </resources>
