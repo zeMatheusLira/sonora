@@ -19,7 +19,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.sonora.feature.artists.ui.ArtistsScreen
 import com.example.sonora.feature.decades.ui.DecadesScreen
+import com.example.sonora.feature.instruments.ui.InstrumentsScreen
 import com.example.sonora.feature.tracks.ui.TracksScreen
 
 /** Raiz do app: Scaffold com a barra de navegação inferior e o NavHost das features. */
@@ -67,6 +69,8 @@ fun SonoraApp() {
         ) {
             composable(TopLevelDestination.TRACKS.route) { TracksScreen() }
             composable(TopLevelDestination.DECADES.route) { DecadesScreen() }
+            composable(TopLevelDestination.ARTISTS.route) { ArtistsScreen() }
+            composable(TopLevelDestination.INSTRUMENTS.route) { InstrumentsScreen() }
         }
     }
 }

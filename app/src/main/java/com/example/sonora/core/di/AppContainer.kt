@@ -3,7 +3,10 @@ package com.example.sonora.core.di
 import android.content.Context
 import com.example.sonora.core.database.AppDatabase
 import com.example.sonora.core.network.NetworkModule
+import com.example.sonora.feature.artists.data.ArtistsRepository
+import com.example.sonora.feature.artists.data.remote.ArtistsApi
 import com.example.sonora.feature.decades.data.DecadesRepository
+import com.example.sonora.feature.instruments.data.InstrumentsRepository
 import com.example.sonora.feature.tracks.data.TracksRepository
 import com.example.sonora.feature.tracks.data.remote.DeezerApi
 import retrofit2.Retrofit
@@ -29,5 +32,15 @@ class AppContainer(context: Context) {
     // Integrante 1 — Décadas da Música (Room)
     val decadesRepository: DecadesRepository by lazy {
         DecadesRepository(database.decadeDao())
+    }
+
+    // Top Artistas (Retrofit) // integrante 2
+    val artistsRepository: ArtistsRepository by lazy {
+        ArtistsRepository(retrofit.create(ArtistsApi::class.java))
+    }
+
+    // Instrumentos Musicais (Room)// integrante 2
+    val instrumentsRepository: InstrumentsRepository by lazy {
+        InstrumentsRepository(database.instrumentDao())
     }
 }
