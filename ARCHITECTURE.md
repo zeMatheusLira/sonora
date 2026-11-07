@@ -16,31 +16,41 @@ flowchart TD
         Nav["SonoraApp<br/>Scaffold + NavigationBar"]
         TS["TracksScreen<br/>Top Músicas"]
         DS["DecadesScreen<br/>Décadas da Música"]
+        AS["ArtistsScreen<br/>Top Artistas"]
+        IS["InstrumentsScreen<br/>Instrumentos Musicais"]
     end
 
     subgraph VM["ViewModel (StateFlow + viewModelScope)"]
         TVM["TracksViewModel<br/>TracksUiState"]
         DVM["DecadesViewModel<br/>DecadesUiState"]
+        AVM["ArtistsViewModel<br/>ArtistsUiState"]
+        IVM["InstrumentsViewModel<br/>InstrumentsUiState"]
     end
 
     subgraph REPO["Repository"]
         TR["TracksRepository<br/>Result&lt;List&lt;Track&gt;&gt;"]
         DR["DecadesRepository<br/>Flow&lt;List&lt;Decade&gt;&gt;"]
+        AR["ArtistsRepository<br/>Result&lt;List&lt;Artist&gt;&gt;"]
+        IR["InstrumentsRepository<br/>Flow&lt;List&lt;Instrument&gt;&gt;"]
     end
 
     subgraph DATA["Fontes de dados"]
         API["DeezerApi (Retrofit)<br/>GET chart/0/tracks"]
         DAO["DecadeDao (Room)<br/>tabela decades"]
+        AAPI["ArtistsApi (Retrofit)<br/>GET chart/0/artists"]
+        IDAO["InstrumentDao (Room)<br/>tabela instruments"]
         DB[("AppDatabase<br/>sonora.db")]
         NET(("api.deezer.com"))
     end
 
     APP["SonoraApplication<br/>AppContainer (DI manual)"]
 
-    Nav --> TS & DS
+    Nav --> TS & DS & AS & IS
     TS --> TVM --> TR --> API --> NET
     DS --> DVM --> DR --> DAO --> DB
-    APP -. fornece Retrofit e banco .-> TR & DR
+    AS --> AVM --> AR --> AAPI --> NET
+    IS --> IVM --> IR --> IDAO --> DB
+    APP -. fornece Retrofit e banco .-> TR & DR & AR & IR
 ```
 
 Fluxo de dados: a UI coleta o `StateFlow` do ViewModel com
@@ -87,6 +97,21 @@ com.example.sonora
             ├── DecadesUiState.kt
             ├── DecadesViewModel.kt
             └── DecadesScreen.kt
+    ├── artists/                  # Top Artistas — Retrofit
+    │   ├── data/
+    │   │   ├── remote/ArtistsApi.kt
+    │   │   ├── remote/dto/ChartArtistsResponse.kt
+    │   │   ├── model/Artist.kt
+    │   │   └── ArtistsRepository.kt
+    │   └── ui/ (ArtistsUiState, ArtistsViewModel, ArtistsScreen)
+    └── instruments/              # Instrumentos Musicais — Room
+        ├── data/
+        │   ├── local/InstrumentEntity.kt
+        │   ├── local/InstrumentDao.kt
+        │   ├── local/InstrumentsSeed.kt
+        │   ├── model/Instrument.kt
+        │   └── InstrumentsRepository.kt
+        └── ui/ (InstrumentsUiState, InstrumentsViewModel, InstrumentsScreen)
 ```
 
 ### Como outro integrante adiciona a sua feature
@@ -95,7 +120,9 @@ com.example.sonora
 2. **Room:** criar a sua `@Entity` e o seu `@Dao`; em `AppDatabase` acrescentar a
    entity em `entities = [...]`, uma `abstract fun <nome>Dao()` e **subir a
    `version`** (com `Migration` ou `fallbackToDestructiveMigration`). Se tiver
-   seed, adicionar a chamada em `AppDatabase.SeedCallback`.
+   seed, adicionar a chamada em `AppDatabase.SeedCallback.populateAll`.
+   Atenção: na migração destrutiva o Room **não** chama `onCreate`, por isso o
+   `SeedCallback` também popula as tabelas em `onDestructiveMigration`.
 3. **Retrofit:** criar a própria interface (ex.: `AlbumsApi`) e obtê-la com
    `container.retrofit.create(AlbumsApi::class.java)`.
 4. Expor o repositório em `AppContainer`.
@@ -157,3 +184,23 @@ com curl:
 Em caso de falha a Deezer responde **HTTP 200** com
 `{"error": {"type": "...", "message": "...", "code": 0}}`, por isso o
 Repository também verifica esse campo.
+
+## API utilizada (Top Artistas)
+
+`GET https://api.deezer.com/chart/0/artists` (sem chave). Resposta validada
+com curl; campos usados: `id`, `name`, `position`, `picture_medium`,
+`picture_big`. Mesmo tratamento de erro (`error` com HTTP 200) da tela Top Músicas.
+
+## Banco local (Instrumentos Musicais)
+
+Tabela `instruments` (id, name, family, origin, description, famous_players,
+curiosity), com 12 instrumentos em 4 famílias (Cordas, Sopro, Percussão,
+Teclas). O DAO só tem consultas: `getAllInstruments()`,
+`getInstrumentsByFamily(family)` e `getFamilies()`, todas em `Flow`. O filtro
+por família da tela troca a consulta com `flatMapLatest`, sem alterar dados.
+
+## Build
+
+O Gradle 8.11.1 não roda no JDK 25. Use o JDK 21 (o JBR do Android Studio ou o
+Corretto 21), por exemplo:
+`JAVA_HOME=<caminho do JDK 21> ./gradlew assembleDebug`.

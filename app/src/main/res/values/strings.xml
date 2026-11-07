@@ -4,6 +4,8 @@
     <!-- Navegação -->
     <string name="nav_tracks">Top Músicas</string>
     <string name="nav_decades">Décadas</string>
+    <string name="nav_artists">Artistas</string>
+    <string name="nav_instruments">Instrumentos</string>
 
     <!-- Estados comuns -->
     <string name="state_loading">Carregando…</string>
@@ -26,4 +28,21 @@
     <string name="decades_about">Sobre a década</string>
     <string name="decades_expand">Mostrar descrição</string>
     <string name="decades_collapse">Ocultar descrição</string>
+
+    <!-- Top Artistas -->
+    <string name="artists_title">Top Artistas</string>
+    <string name="artists_subtitle">Os artistas mais ouvidos agora na Deezer</string>
+    <string name="artists_empty">A Deezer não retornou nenhum artista no momento.</string>
+    <string name="artists_picture_description">Foto de %1$s</string>
+
+    <!-- Instrumentos Musicais -->
+    <string name="instruments_title">Instrumentos Musicais</string>
+    <string name="instruments_subtitle">Filtre por família e toque em um card para saber mais</string>
+    <string name="instruments_empty">Nenhum instrumento encontrado no banco local.</string>
+    <string name="instruments_filter_all">Todos</string>
+    <string name="instruments_players">Músicos famosos</string>
+    <string name="instruments_about">Sobre o instrumento</string>
+    <string name="instruments_origin">Origem</string>
+    <string name="instruments_expand">Mostrar detalhes</string>
+    <string name="instruments_collapse">Ocultar detalhes</string>
 </resources>

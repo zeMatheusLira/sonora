@@ -3,6 +3,8 @@ package com.example.sonora.core.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.sonora.R
@@ -25,5 +27,16 @@ enum class TopLevelDestination(
         route = "decades",
         labelRes = R.string.nav_decades,
         icon = Icons.Filled.DateRange
+    ),
+    ARTISTS(
+        route = "artists",
+        labelRes = R.string.nav_artists,
+        icon = Icons.Filled.Person
+    ),
+    INSTRUMENTS(
+        route = "instruments",
+        labelRes = R.string.nav_instruments,
+        // O conjunto básico de ícones não tem instrumento; o sino é o mais próximo
+        icon = Icons.Filled.Notifications
     )
 }

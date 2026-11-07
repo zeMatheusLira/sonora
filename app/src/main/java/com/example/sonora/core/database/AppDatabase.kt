@@ -8,6 +8,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.sonora.feature.decades.data.local.DecadeDao
 import com.example.sonora.feature.decades.data.local.DecadeEntity
 import com.example.sonora.feature.decades.data.local.DecadesSeed
+import com.example.sonora.feature.instruments.data.local.InstrumentDao
+import com.example.sonora.feature.instruments.data.local.InstrumentEntity
+import com.example.sonora.feature.instruments.data.local.InstrumentsSeed
 
 /**
  * Banco único do app. Para adicionar a sua tabela:
@@ -18,20 +21,38 @@ import com.example.sonora.feature.decades.data.local.DecadesSeed
  */
 @Database(
     entities = [
-        DecadeEntity::class, // Integrante 1 — Décadas da Música
+        DecadeEntity::class, // Décadas da Música
+        InstrumentEntity::class, // Instrumentos Musicais
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun decadeDao(): DecadeDao
 
-    /** Popula as tabelas na criação do banco (roda só na primeira abertura). */
+    abstract fun instrumentDao(): InstrumentDao
+
+    /**
+     * Popula as tabelas com os dados iniciais.
+     * - onCreate: primeira abertura do banco (app recém-instalado).
+     * - onDestructiveMigration: quando a `version` sobe, o fallbackToDestructiveMigration
+     *   apaga e recria as tabelas SEM chamar onCreate; sem isto as telas ficariam vazias.
+     */
     private class SeedCallback : Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
+            populateAll(db)
+        }
+
+        override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+            super.onDestructiveMigration(db)
+            populateAll(db)
+        }
+
+        private fun populateAll(db: SupportSQLiteDatabase) {
             DecadesSeed.populate(db)
+            InstrumentsSeed.populate(db)
         }
     }
 
