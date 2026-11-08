@@ -19,8 +19,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.sonora.feature.albums.ui.AlbumsScreen
 import com.example.sonora.feature.artists.ui.ArtistsScreen
 import com.example.sonora.feature.decades.ui.DecadesScreen
+import com.example.sonora.feature.festivals.ui.FestivalsScreen
 import com.example.sonora.feature.instruments.ui.InstrumentsScreen
 import com.example.sonora.feature.tracks.ui.TracksScreen
 
@@ -71,6 +73,8 @@ fun SonoraApp() {
             composable(TopLevelDestination.DECADES.route) { DecadesScreen() }
             composable(TopLevelDestination.ARTISTS.route) { ArtistsScreen() }
             composable(TopLevelDestination.INSTRUMENTS.route) { InstrumentsScreen() }
+            composable(TopLevelDestination.ALBUMS.route) { AlbumsScreen() }
+            composable(TopLevelDestination.FESTIVALS.route) { FestivalsScreen() }
         }
     }
 }

@@ -18,6 +18,8 @@ flowchart TD
         DS["DecadesScreen<br/>Décadas da Música"]
         AS["ArtistsScreen<br/>Top Artistas"]
         IS["InstrumentsScreen<br/>Instrumentos Musicais"]
+        ALS["AlbumsScreen<br/>Top Álbuns"]
+        FS["FestivalsScreen<br/>Festivais de Música"]
     end
 
     subgraph VM["ViewModel (StateFlow + viewModelScope)"]
@@ -25,6 +27,8 @@ flowchart TD
         DVM["DecadesViewModel<br/>DecadesUiState"]
         AVM["ArtistsViewModel<br/>ArtistsUiState"]
         IVM["InstrumentsViewModel<br/>InstrumentsUiState"]
+        ALVM["AlbumsViewModel<br/>AlbumsUiState"]
+        FVM["FestivalsViewModel<br/>FestivalsUiState"]
     end
 
     subgraph REPO["Repository"]
@@ -32,6 +36,8 @@ flowchart TD
         DR["DecadesRepository<br/>Flow&lt;List&lt;Decade&gt;&gt;"]
         AR["ArtistsRepository<br/>Result&lt;List&lt;Artist&gt;&gt;"]
         IR["InstrumentsRepository<br/>Flow&lt;List&lt;Instrument&gt;&gt;"]
+        ALR["AlbumsRepository<br/>Result&lt;List&lt;Album&gt;&gt;"]
+        FR["FestivalsRepository<br/>Flow&lt;List&lt;Festival&gt;&gt;"]
     end
 
     subgraph DATA["Fontes de dados"]
@@ -39,18 +45,22 @@ flowchart TD
         DAO["DecadeDao (Room)<br/>tabela decades"]
         AAPI["ArtistsApi (Retrofit)<br/>GET chart/0/artists"]
         IDAO["InstrumentDao (Room)<br/>tabela instruments"]
+        ALAPI["AlbumsApi (Retrofit)<br/>GET chart/0/albums"]
+        FDAO["FestivalDao (Room)<br/>tabela festivals"]
         DB[("AppDatabase<br/>sonora.db")]
         NET(("api.deezer.com"))
     end
 
     APP["SonoraApplication<br/>AppContainer (DI manual)"]
 
-    Nav --> TS & DS & AS & IS
+    Nav --> TS & DS & AS & IS & ALS & FS
     TS --> TVM --> TR --> API --> NET
     DS --> DVM --> DR --> DAO --> DB
     AS --> AVM --> AR --> AAPI --> NET
     IS --> IVM --> IR --> IDAO --> DB
-    APP -. fornece Retrofit e banco .-> TR & DR & AR & IR
+    ALS --> ALVM --> ALR --> ALAPI --> NET
+    FS --> FVM --> FR --> FDAO --> DB
+    APP -. fornece Retrofit e banco .-> TR & DR & AR & IR & ALR & FR
 ```
 
 Fluxo de dados: a UI coleta o `StateFlow` do ViewModel com
@@ -90,7 +100,7 @@ com.example.sonora
         ├── data/
         │   ├── local/DecadeEntity.kt
         │   ├── local/DecadeDao.kt
-        │   ├── local/DecadesSeed.kt   # seed inicial (RoomDatabase.Callback.onCreate)
+        │   ├── local/DecadesSeed.kt   # seed inicial (SeedCallback.onOpen, se a tabela estiver vazia)
         │   ├── model/Decade.kt
         │   └── DecadesRepository.kt
         └── ui/
@@ -112,6 +122,21 @@ com.example.sonora
         │   ├── model/Instrument.kt
         │   └── InstrumentsRepository.kt
         └── ui/ (InstrumentsUiState, InstrumentsViewModel, InstrumentsScreen)
+    ├── albums/                   # Integrante 3 — Top Álbuns — Retrofit
+    │   ├── data/
+    │   │   ├── remote/AlbumsApi.kt
+    │   │   ├── remote/dto/ChartAlbumsResponse.kt
+    │   │   ├── model/Album.kt
+    │   │   └── AlbumsRepository.kt
+    │   └── ui/ (AlbumsUiState, AlbumsViewModel, AlbumsScreen)
+    └── festivals/                # Integrante 3 — Festivais de Música — Room
+        ├── data/
+        │   ├── local/FestivalEntity.kt
+        │   ├── local/FestivalDao.kt
+        │   ├── local/FestivalsSeed.kt
+        │   ├── model/Festival.kt
+        │   └── FestivalsRepository.kt
+        └── ui/ (FestivalsUiState, FestivalsViewModel, FestivalsScreen)
 ```
 
 ### Como outro integrante adiciona a sua feature
@@ -120,9 +145,10 @@ com.example.sonora
 2. **Room:** criar a sua `@Entity` e o seu `@Dao`; em `AppDatabase` acrescentar a
    entity em `entities = [...]`, uma `abstract fun <nome>Dao()` e **subir a
    `version`** (com `Migration` ou `fallbackToDestructiveMigration`). Se tiver
-   seed, adicionar a chamada em `AppDatabase.SeedCallback.populateAll`.
-   Atenção: na migração destrutiva o Room **não** chama `onCreate`, por isso o
-   `SeedCallback` também popula as tabelas em `onDestructiveMigration`.
+   seed, adicionar `seedIfEmpty(db, <TABELA>) { <Seed>.populate(it) }` em
+   `AppDatabase.SeedCallback.onOpen`. Não use `onDestructiveMigration` para o seed:
+   o Room o chama depois de apagar as tabelas e antes de recriá-las, e o insert
+   falha com "no such table".
 3. **Retrofit:** criar a própria interface (ex.: `AlbumsApi`) e obtê-la com
    `container.retrofit.create(AlbumsApi::class.java)`.
 4. Expor o repositório em `AppContainer`.
@@ -198,6 +224,22 @@ curiosity), com 12 instrumentos em 4 famílias (Cordas, Sopro, Percussão,
 Teclas). O DAO só tem consultas: `getAllInstruments()`,
 `getInstrumentsByFamily(family)` e `getFamilies()`, todas em `Flow`. O filtro
 por família da tela troca a consulta com `flatMapLatest`, sem alterar dados.
+
+## API utilizada (Top Álbuns, integrante 3)
+
+`GET https://api.deezer.com/chart/0/albums` (sem chave). Resposta validada
+com curl; campos usados: `id`, `title`, `position`, `record_type`,
+`explicit_lyrics`, `cover_medium`, `cover_big` e `artist.name`. Mesmo
+tratamento de erro (`error` com HTTP 200) das outras telas da Deezer.
+
+## Banco local (Festivais de Música, integrante 3)
+
+Tabela `festivals` (id, name, city, country, region, first_edition, genres,
+description, iconic_artists, curiosity), com 10 festivais em 4 regiões
+(Brasil, Europa, América do Norte, Ásia). O DAO só tem consultas:
+`getAllFestivals()`, `getFestivalsByRegion(region)` e `getRegions()`, todas em
+`Flow` e ordenadas pelo ano da primeira edição (linha do tempo). O filtro por
+região troca a consulta com `flatMapLatest`. Banco na `version = 3`.
 
 ## Build
 

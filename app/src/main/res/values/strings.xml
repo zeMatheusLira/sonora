@@ -6,6 +6,8 @@
     <string name="nav_decades">Décadas</string>
     <string name="nav_artists">Artistas</string>
     <string name="nav_instruments">Instrumentos</string>
+    <string name="nav_albums">Álbuns</string>
+    <string name="nav_festivals">Festivais</string>
 
     <!-- Estados comuns -->
     <string name="state_loading">Carregando…</string>
@@ -45,4 +47,27 @@
     <string name="instruments_origin">Origem</string>
     <string name="instruments_expand">Mostrar detalhes</string>
     <string name="instruments_collapse">Ocultar detalhes</string>
+
+    <!-- Top Álbuns (integrante 3) -->
+    <string name="albums_title">Top Álbuns</string>
+    <string name="albums_subtitle">Os álbuns mais ouvidos agora na Deezer</string>
+    <string name="albums_empty">A Deezer não retornou nenhum álbum no momento.</string>
+    <string name="albums_cover_description">Capa do álbum %1$s</string>
+    <string name="albums_explicit">Explícito</string>
+    <string name="albums_type_album">Álbum</string>
+    <string name="albums_type_single">Single</string>
+    <string name="albums_type_ep">EP</string>
+    <string name="albums_type_compile">Coletânea</string>
+
+    <!-- Festivais de Música (integrante 3) -->
+    <string name="festivals_title">Festivais de Música</string>
+    <string name="festivals_subtitle">Uma linha do tempo dos grandes festivais. Toque para saber mais</string>
+    <string name="festivals_empty">Nenhum festival encontrado no banco local.</string>
+    <string name="festivals_filter_all">Todos</string>
+    <string name="festivals_since">Desde %1$d</string>
+    <string name="festivals_location">Local</string>
+    <string name="festivals_about">Sobre o festival</string>
+    <string name="festivals_artists">Artistas marcantes</string>
+    <string name="festivals_expand">Mostrar detalhes</string>
+    <string name="festivals_collapse">Ocultar detalhes</string>
 </resources>

@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
- * Seed inicial da tabela "instruments", executado uma única vez quando o banco é criado
- * (AppDatabase.SeedCallback.onCreate). Não existe tela para o usuário inserir ou editar dados.
+ * Seed inicial da tabela "instruments", executado quando a tabela está vazia ao abrir o banco
+ * (AppDatabase.SeedCallback.onOpen). Não existe tela para o usuário inserir ou editar dados.
  */
 object InstrumentsSeed {
 

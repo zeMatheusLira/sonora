@@ -3,9 +3,12 @@ package com.example.sonora.core.di
 import android.content.Context
 import com.example.sonora.core.database.AppDatabase
 import com.example.sonora.core.network.NetworkModule
+import com.example.sonora.feature.albums.data.AlbumsRepository
+import com.example.sonora.feature.albums.data.remote.AlbumsApi
 import com.example.sonora.feature.artists.data.ArtistsRepository
 import com.example.sonora.feature.artists.data.remote.ArtistsApi
 import com.example.sonora.feature.decades.data.DecadesRepository
+import com.example.sonora.feature.festivals.data.FestivalsRepository
 import com.example.sonora.feature.instruments.data.InstrumentsRepository
 import com.example.sonora.feature.tracks.data.TracksRepository
 import com.example.sonora.feature.tracks.data.remote.DeezerApi
@@ -42,5 +45,15 @@ class AppContainer(context: Context) {
     // Instrumentos Musicais (Room)// integrante 2
     val instrumentsRepository: InstrumentsRepository by lazy {
         InstrumentsRepository(database.instrumentDao())
+    }
+
+    // Integrante 3 — Top Álbuns (Retrofit)
+    val albumsRepository: AlbumsRepository by lazy {
+        AlbumsRepository(retrofit.create(AlbumsApi::class.java))
+    }
+
+    // Integrante 3 — Festivais de Música (Room)
+    val festivalsRepository: FestivalsRepository by lazy {
+        FestivalsRepository(database.festivalDao())
     }
 }
