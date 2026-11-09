@@ -8,6 +8,8 @@
     <string name="nav_instruments">Instrumentos</string>
     <string name="nav_albums">Álbuns</string>
     <string name="nav_festivals">Festivais</string>
+    <string name="nav_playlists">Playlists</string>
+    <string name="nav_genres">Gêneros</string>
 
     <!-- Estados comuns -->
     <string name="state_loading">Carregando…</string>
@@ -70,4 +72,31 @@
     <string name="festivals_artists">Artistas marcantes</string>
     <string name="festivals_expand">Mostrar detalhes</string>
     <string name="festivals_collapse">Ocultar detalhes</string>
+
+    <!-- Top Playlists (integrante 4) -->
+    <string name="playlists_title">Top Playlists</string>
+    <string name="playlists_subtitle">As playlists em alta agora na Deezer</string>
+    <string name="playlists_empty">A Deezer não retornou nenhuma playlist no momento.</string>
+    <string name="playlists_cover_description">Capa da playlist %1$s</string>
+    <string name="playlists_by">por %1$s</string>
+    <plurals name="playlists_tracks">
+        <item quantity="one">%1$d faixa</item>
+        <item quantity="other">%1$d faixas</item>
+    </plurals>
+
+    <!-- Gêneros Musicais (integrante 4) -->
+    <string name="genres_title">Gêneros Musicais</string>
+    <string name="genres_subtitle">Busque um gênero e toque no card para conhecer a história</string>
+    <string name="genres_empty">Nenhum gênero encontrado no banco local.</string>
+    <string name="genres_no_results">Nenhum gênero combina com \"%1$s\".</string>
+    <string name="genres_search_hint">Buscar por gênero, raiz ou artista</string>
+    <string name="genres_search_clear">Limpar busca</string>
+    <string name="genres_origin">%1$s • por volta de %2$d</string>
+    <string name="genres_tempo">Andamento típico</string>
+    <string name="genres_bpm">%1$d–%2$d BPM</string>
+    <string name="genres_about">Sobre o gênero</string>
+    <string name="genres_roots">Raízes</string>
+    <string name="genres_artists">Artistas de referência</string>
+    <string name="genres_expand">Mostrar detalhes</string>
+    <string name="genres_collapse">Ocultar detalhes</string>
 </resources>

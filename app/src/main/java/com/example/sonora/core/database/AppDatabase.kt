@@ -11,6 +11,9 @@ import com.example.sonora.feature.decades.data.local.DecadesSeed
 import com.example.sonora.feature.festivals.data.local.FestivalDao
 import com.example.sonora.feature.festivals.data.local.FestivalEntity
 import com.example.sonora.feature.festivals.data.local.FestivalsSeed
+import com.example.sonora.feature.genres.data.local.GenreDao
+import com.example.sonora.feature.genres.data.local.GenreEntity
+import com.example.sonora.feature.genres.data.local.GenresSeed
 import com.example.sonora.feature.instruments.data.local.InstrumentDao
 import com.example.sonora.feature.instruments.data.local.InstrumentEntity
 import com.example.sonora.feature.instruments.data.local.InstrumentsSeed
@@ -27,8 +30,9 @@ import com.example.sonora.feature.instruments.data.local.InstrumentsSeed
         DecadeEntity::class, // Décadas da Música
         InstrumentEntity::class, // Instrumentos Musicais
         FestivalEntity::class, // Festivais de Música (integrante 3)
+        GenreEntity::class, // Gêneros Musicais (integrante 4)
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -38,6 +42,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun instrumentDao(): InstrumentDao
 
     abstract fun festivalDao(): FestivalDao
+
+    abstract fun genreDao(): GenreDao
 
     /**
      * Popula as tabelas com os dados iniciais.
@@ -53,6 +59,7 @@ abstract class AppDatabase : RoomDatabase() {
             seedIfEmpty(db, DecadeEntity.TABLE_NAME) { DecadesSeed.populate(it) }
             seedIfEmpty(db, InstrumentEntity.TABLE_NAME) { InstrumentsSeed.populate(it) }
             seedIfEmpty(db, FestivalEntity.TABLE_NAME) { FestivalsSeed.populate(it) }
+            seedIfEmpty(db, GenreEntity.TABLE_NAME) { GenresSeed.populate(it) }
         }
 
         private fun seedIfEmpty(

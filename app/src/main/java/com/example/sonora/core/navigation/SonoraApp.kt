@@ -23,7 +23,9 @@ import com.example.sonora.feature.albums.ui.AlbumsScreen
 import com.example.sonora.feature.artists.ui.ArtistsScreen
 import com.example.sonora.feature.decades.ui.DecadesScreen
 import com.example.sonora.feature.festivals.ui.FestivalsScreen
+import com.example.sonora.feature.genres.ui.GenresScreen
 import com.example.sonora.feature.instruments.ui.InstrumentsScreen
+import com.example.sonora.feature.playlists.ui.PlaylistsScreen
 import com.example.sonora.feature.tracks.ui.TracksScreen
 
 /** Raiz do app: Scaffold com a barra de navegação inferior e o NavHost das features. */
@@ -75,6 +77,8 @@ fun SonoraApp() {
             composable(TopLevelDestination.INSTRUMENTS.route) { InstrumentsScreen() }
             composable(TopLevelDestination.ALBUMS.route) { AlbumsScreen() }
             composable(TopLevelDestination.FESTIVALS.route) { FestivalsScreen() }
+            composable(TopLevelDestination.PLAYLISTS.route) { PlaylistsScreen() }
+            composable(TopLevelDestination.GENRES.route) { GenresScreen() }
         }
     }
 }

@@ -9,7 +9,10 @@ import com.example.sonora.feature.artists.data.ArtistsRepository
 import com.example.sonora.feature.artists.data.remote.ArtistsApi
 import com.example.sonora.feature.decades.data.DecadesRepository
 import com.example.sonora.feature.festivals.data.FestivalsRepository
+import com.example.sonora.feature.genres.data.GenresRepository
 import com.example.sonora.feature.instruments.data.InstrumentsRepository
+import com.example.sonora.feature.playlists.data.PlaylistsRepository
+import com.example.sonora.feature.playlists.data.remote.PlaylistsApi
 import com.example.sonora.feature.tracks.data.TracksRepository
 import com.example.sonora.feature.tracks.data.remote.DeezerApi
 import retrofit2.Retrofit
@@ -55,5 +58,15 @@ class AppContainer(context: Context) {
     // Integrante 3 — Festivais de Música (Room)
     val festivalsRepository: FestivalsRepository by lazy {
         FestivalsRepository(database.festivalDao())
+    }
+
+    // Integrante 4 — Top Playlists (Retrofit)
+    val playlistsRepository: PlaylistsRepository by lazy {
+        PlaylistsRepository(retrofit.create(PlaylistsApi::class.java))
+    }
+
+    // Integrante 4 — Gêneros Musicais (Room)
+    val genresRepository: GenresRepository by lazy {
+        GenresRepository(database.genreDao())
     }
 }

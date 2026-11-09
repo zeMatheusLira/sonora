@@ -20,6 +20,8 @@ flowchart TD
         IS["InstrumentsScreen<br/>Instrumentos Musicais"]
         ALS["AlbumsScreen<br/>Top Álbuns"]
         FS["FestivalsScreen<br/>Festivais de Música"]
+        PS["PlaylistsScreen<br/>Top Playlists"]
+        GS["GenresScreen<br/>Gêneros Musicais"]
     end
 
     subgraph VM["ViewModel (StateFlow + viewModelScope)"]
@@ -29,6 +31,8 @@ flowchart TD
         IVM["InstrumentsViewModel<br/>InstrumentsUiState"]
         ALVM["AlbumsViewModel<br/>AlbumsUiState"]
         FVM["FestivalsViewModel<br/>FestivalsUiState"]
+        PVM["PlaylistsViewModel<br/>PlaylistsUiState"]
+        GVM["GenresViewModel<br/>GenresUiState"]
     end
 
     subgraph REPO["Repository"]
@@ -38,6 +42,8 @@ flowchart TD
         IR["InstrumentsRepository<br/>Flow&lt;List&lt;Instrument&gt;&gt;"]
         ALR["AlbumsRepository<br/>Result&lt;List&lt;Album&gt;&gt;"]
         FR["FestivalsRepository<br/>Flow&lt;List&lt;Festival&gt;&gt;"]
+        PR["PlaylistsRepository<br/>Result&lt;List&lt;Playlist&gt;&gt;"]
+        GR["GenresRepository<br/>Flow&lt;List&lt;Genre&gt;&gt;"]
     end
 
     subgraph DATA["Fontes de dados"]
@@ -47,20 +53,24 @@ flowchart TD
         IDAO["InstrumentDao (Room)<br/>tabela instruments"]
         ALAPI["AlbumsApi (Retrofit)<br/>GET chart/0/albums"]
         FDAO["FestivalDao (Room)<br/>tabela festivals"]
+        PAPI["PlaylistsApi (Retrofit)<br/>GET chart/0/playlists"]
+        GDAO["GenreDao (Room)<br/>tabela music_genres"]
         DB[("AppDatabase<br/>sonora.db")]
         NET(("api.deezer.com"))
     end
 
     APP["SonoraApplication<br/>AppContainer (DI manual)"]
 
-    Nav --> TS & DS & AS & IS & ALS & FS
+    Nav --> TS & DS & AS & IS & ALS & FS & PS & GS
     TS --> TVM --> TR --> API --> NET
     DS --> DVM --> DR --> DAO --> DB
     AS --> AVM --> AR --> AAPI --> NET
     IS --> IVM --> IR --> IDAO --> DB
     ALS --> ALVM --> ALR --> ALAPI --> NET
     FS --> FVM --> FR --> FDAO --> DB
-    APP -. fornece Retrofit e banco .-> TR & DR & AR & IR & ALR & FR
+    PS --> PVM --> PR --> PAPI --> NET
+    GS --> GVM --> GR --> GDAO --> DB
+    APP -. fornece Retrofit e banco .-> TR & DR & AR & IR & ALR & FR & PR & GR
 ```
 
 Fluxo de dados: a UI coleta o `StateFlow` do ViewModel com
@@ -96,17 +106,17 @@ com.example.sonora
     │       ├── TracksUiState.kt
     │       ├── TracksViewModel.kt
     │       └── TracksScreen.kt
-    └── decades/                  # Integrante 1 — Room
-        ├── data/
-        │   ├── local/DecadeEntity.kt
-        │   ├── local/DecadeDao.kt
-        │   ├── local/DecadesSeed.kt   # seed inicial (SeedCallback.onOpen, se a tabela estiver vazia)
-        │   ├── model/Decade.kt
-        │   └── DecadesRepository.kt
-        └── ui/
-            ├── DecadesUiState.kt
-            ├── DecadesViewModel.kt
-            └── DecadesScreen.kt
+    ├── decades/                  # Integrante 1 — Room
+    │   ├── data/
+    │   │   ├── local/DecadeEntity.kt
+    │   │   ├── local/DecadeDao.kt
+    │   │   ├── local/DecadesSeed.kt   # seed inicial (SeedCallback.onOpen, se a tabela estiver vazia)
+    │   │   ├── model/Decade.kt
+    │   │   └── DecadesRepository.kt
+    │   └── ui/
+    │       ├── DecadesUiState.kt
+    │       ├── DecadesViewModel.kt
+    │       └── DecadesScreen.kt
     ├── artists/                  # Top Artistas — Retrofit
     │   ├── data/
     │   │   ├── remote/ArtistsApi.kt
@@ -114,14 +124,14 @@ com.example.sonora
     │   │   ├── model/Artist.kt
     │   │   └── ArtistsRepository.kt
     │   └── ui/ (ArtistsUiState, ArtistsViewModel, ArtistsScreen)
-    └── instruments/              # Instrumentos Musicais — Room
-        ├── data/
-        │   ├── local/InstrumentEntity.kt
-        │   ├── local/InstrumentDao.kt
-        │   ├── local/InstrumentsSeed.kt
-        │   ├── model/Instrument.kt
-        │   └── InstrumentsRepository.kt
-        └── ui/ (InstrumentsUiState, InstrumentsViewModel, InstrumentsScreen)
+    ├── instruments/              # Instrumentos Musicais — Room
+    │   ├── data/
+    │   │   ├── local/InstrumentEntity.kt
+    │   │   ├── local/InstrumentDao.kt
+    │   │   ├── local/InstrumentsSeed.kt
+    │   │   ├── model/Instrument.kt
+    │   │   └── InstrumentsRepository.kt
+    │   └── ui/ (InstrumentsUiState, InstrumentsViewModel, InstrumentsScreen)
     ├── albums/                   # Integrante 3 — Top Álbuns — Retrofit
     │   ├── data/
     │   │   ├── remote/AlbumsApi.kt
@@ -129,14 +139,29 @@ com.example.sonora
     │   │   ├── model/Album.kt
     │   │   └── AlbumsRepository.kt
     │   └── ui/ (AlbumsUiState, AlbumsViewModel, AlbumsScreen)
-    └── festivals/                # Integrante 3 — Festivais de Música — Room
+    ├── festivals/                # Integrante 3 — Festivais de Música — Room
+    │   ├── data/
+    │   │   ├── local/FestivalEntity.kt
+    │   │   ├── local/FestivalDao.kt
+    │   │   ├── local/FestivalsSeed.kt
+    │   │   ├── model/Festival.kt
+    │   │   └── FestivalsRepository.kt
+    │   └── ui/ (FestivalsUiState, FestivalsViewModel, FestivalsScreen)
+    ├── playlists/                # Integrante 4 — Top Playlists — Retrofit
+    │   ├── data/
+    │   │   ├── remote/PlaylistsApi.kt
+    │   │   ├── remote/dto/ChartPlaylistsResponse.kt
+    │   │   ├── model/Playlist.kt
+    │   │   └── PlaylistsRepository.kt
+    │   └── ui/ (PlaylistsUiState, PlaylistsViewModel, PlaylistsScreen)
+    └── genres/                   # Integrante 4 — Gêneros Musicais — Room
         ├── data/
-        │   ├── local/FestivalEntity.kt
-        │   ├── local/FestivalDao.kt
-        │   ├── local/FestivalsSeed.kt
-        │   ├── model/Festival.kt
-        │   └── FestivalsRepository.kt
-        └── ui/ (FestivalsUiState, FestivalsViewModel, FestivalsScreen)
+        │   ├── local/GenreEntity.kt
+        │   ├── local/GenreDao.kt
+        │   ├── local/GenresSeed.kt
+        │   ├── model/Genre.kt
+        │   └── GenresRepository.kt
+        └── ui/ (GenresUiState, GenresViewModel, GenresScreen)
 ```
 
 ### Como outro integrante adiciona a sua feature
@@ -239,7 +264,24 @@ description, iconic_artists, curiosity), com 10 festivais em 4 regiões
 (Brasil, Europa, América do Norte, Ásia). O DAO só tem consultas:
 `getAllFestivals()`, `getFestivalsByRegion(region)` e `getRegions()`, todas em
 `Flow` e ordenadas pelo ano da primeira edição (linha do tempo). O filtro por
-região troca a consulta com `flatMapLatest`. Banco na `version = 3`.
+região troca a consulta com `flatMapLatest`.
+
+## API utilizada (Top Playlists, integrante 4)
+
+`GET https://api.deezer.com/chart/0/playlists` (sem chave). Resposta validada
+com curl; campos usados: `id`, `title`, `nb_tracks`, `picture_medium`,
+`picture_big` e `user.name`. A rota não traz `position`, então a posição vem da
+ordem da lista. Mesmo tratamento de erro (`error` com HTTP 200) das outras telas
+da Deezer. A tela mostra as playlists numa grade de 2 colunas.
+
+## Banco local (Gêneros Musicais, integrante 4)
+
+Tabela `music_genres` (id, name, origin_country, origin_year, roots,
+description, bpm_min, bpm_max, key_artists, curiosity), com 12 gêneros. O DAO só
+tem consultas: `getAllGenres()` e `searchGenres(query)` (LIKE em nome, raízes e
+artistas), ambas em `Flow` e ordenadas pelo ano de surgimento. O campo de busca
+só troca a consulta (`debounce` + `flatMapLatest`), sem gravar dados. Cada card
+mostra a faixa típica de BPM num medidor. Banco na `version = 4`.
 
 ## Build
 

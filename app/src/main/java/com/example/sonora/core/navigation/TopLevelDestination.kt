@@ -3,6 +3,8 @@ package com.example.sonora.core.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -50,5 +52,15 @@ enum class TopLevelDestination(
         route = "festivals",
         labelRes = R.string.nav_festivals,
         icon = Icons.Filled.LocationOn
+    ),
+    PLAYLISTS(
+        route = "playlists",
+        labelRes = R.string.nav_playlists,
+        icon = Icons.Filled.List
+    ),
+    GENRES(
+        route = "genres",
+        labelRes = R.string.nav_genres,
+        icon = Icons.Filled.Favorite
     )
 }
